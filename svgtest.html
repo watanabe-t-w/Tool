@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>処理終了メッセージボックス</title>
+  <style>
+    /* ボックスとボタンを中央に配置 */
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+
+  <div style="justify-content: center;">
+	<!-- ローディング -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="48" height="48" fill="#2589d0">
+    <path d="M14 0 H18 V8 H14 z" transform="rotate(0 16 16)" opacity=".1">
+        <animate attributeName="opacity" from="1" to=".1" begin="0" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <path d="M14 0 H18 V8 H14 z" transform="rotate(45 16 16)" opacity=".1">
+        <animate attributeName="opacity" from="1" to=".1" begin="0.125s" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <path d="M14 0 H18 V8 H14 z" transform="rotate(90 16 16)" opacity=".1">
+        <animate attributeName="opacity" from="1" to=".1" begin="0.25s" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <path d="M14 0 H18 V8 H14 z" transform="rotate(135 16 16)" opacity=".1">
+        <animate attributeName="opacity" from="1" to=".1" begin="0.375s" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <path d="M14 0 H18 V8 H14 z" transform="rotate(180 16 16)" opacity=".1">
+        <animate attributeName="opacity" from="1" to=".1" begin="0.5s" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <path d="M14 0 H18 V8 H14 z" transform="rotate(225 16 16)" opacity=".1">
+        <animate attributeName="opacity" from="1" to=".1" begin="0.625s" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <path d="M14 0 H18 V8 H14 z" transform="rotate(270 16 16)" opacity=".1">
+        <animate attributeName="opacity" from="1" to=".1" begin="0.75s" dur="1s" repeatCount="indefinite"/>
+    </path>
+    <path d="M14 0 H18 V8 H14 z" transform="rotate(315 16 16)" opacity=".1">
+        <animate attributeName="opacity" from="1" to=".1" begin="0.875s" dur="1s" repeatCount="indefinite"/>
+    </path>
+</svg>
+
+  </div>
+
+  <div class="container">
+    <!-- SVGで処理終了メッセージボックス -->
+    <svg width="300" height="150" xmlns="http://www.w3.org/2000/svg">
+      <!-- ボックス -->
+      <rect x="10" y="10" width="280" height="130" rx="15" ry="15" fill="#f0f0f0" stroke="#4CAF50" stroke-width="2" />
+      
+      <!-- タイトル -->
+      <text x="20" y="40" font-family="Arial" font-size="20" fill="#4CAF50">処理終了</text>
+      
+      <!-- メッセージ -->
+      <text x="20" y="70" font-family="Arial" font-size="16" fill="#333333">処理が正常に完了しました。</text>
+      
+      <!-- OKボタン -->
+      <rect id="okButton" x="100" y="100" width="100" height="30" rx="5" ry="5" fill="#4CAF50" cursor="pointer"/>
+      <text x="140" y="120" font-family="Arial" font-size="16" fill="#ffffff" text-anchor="middle" alignment-baseline="middle">OK</text>
+    </svg>
+  </div>
+
+  <script>
+    // OKボタンのクリックイベントを処理
+    document.getElementById("okButton").addEventListener("click", function() {
+      alert("処理が完了しました！");
+    });
+  </script>
+
+</body>
+</html>
