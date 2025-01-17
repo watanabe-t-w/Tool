@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>事前確認事項・個人情報利用目的について</title>
+    <style>
+        .disabled {
+            background-color: grey;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>事前確認事項・個人情報利用目的について</h1>
+    <form id="consentForm">
+        <h2>事前確認事項</h2>
+        <p>・お亡くなりになられた方（以下、被相続人さま）の全ての口座は、当金庫で確認でき次第、口座取引を停止させていただきます。</p>
+        <p>・相続人、受遺者、遺言執行者の方のみ、こちらからの相続お手続きが可能です。</p>
+        <p>・事前に被相続人さまの通帳・キャッシュカード等をご準備ください。</p>
+        <p>・被相続人さまの当金庫の預金残高等につきましては、被相続人さまと相続人さまとの関係が確認できる戸籍謄本等を当金庫にご提出いただいた後にお答えが可能となりますので、ご承知おきください。</p>
+        <p>・当金庫事務部相続担当と郵送による手続きを希望された場合、お客さまによる最低2回の郵送手続きが必要となります。※お取引内容により、ご来店をお願いする場合がございます。</p>
+        <p>・戸籍謄本・印鑑証明書等の書類は原本をご用意ください。お申し出がありましたら、原本書類は当金庫にて確認後ご返却いたします。</p>
+        <p>・相続に関しまして、相続人間で紛議が生じている場合や、そのおそれがある場合等につきましては、相続手続きを留保させていただく場合がございます。</p>
+        
+        <label>
+            <input type="checkbox" id="noticeConsent"> 確認しました
+        </label>
+        <h2>個人情報利用目的について</h2>
+        <p>「個人情報利用目的」<br>
+            当金庫は、お客さまからの信頼を第一と考え、お客さまの個人情報及び個人番号（以下「個人情報等」といいます。）の適切な保護と利用を図るために、個人情報の保護に関する法律（平成１５年５月３０日法律第５７号）、行政手続における特定の個人を識別するための番号の利用等に関する法律（平成２５年５月３１日法律第２７号）および金融分野における個人情報保護に関するガイドライン、その他個人情報等保護に関する関係諸法令等を遵守するとともに、その継続的な改善に努めます。また、個人情報等の機密性・正確性の確保に努めます。<br>
+            個人情報保護宣言：<a href="privacy_policy.html">プライバシーポリシー</a>（→プライバシーポリシーのページへ）
+        </p>
+    <label>
+            <input type="checkbox" id="privacyConsent"> 上記内容に同意しました
+        </label>
+        <br><br>
+        <button type="button" id="nextButton" class="disabled">次へ</button>
+    </form>
+
+    <script>
+        const noticeConsent = document.getElementById('noticeConsent');
+        const privacyConsent = document.getElementById('privacyConsent');
+        const nextButton = document.getElementById('nextButton');
+
+        function updateButtonState() {
+            if (noticeConsent.checked && privacyConsent.checked) {
+                nextButton.classList.remove('disabled');
+            } else {
+                nextButton.classList.add('disabled');
+            }
+        }
+
+        noticeConsent.addEventListener('change', updateButtonState);
+        privacyConsent.addEventListener('change', updateButtonState);
+
+        nextButton.addEventListener('click', () => {
+            if (nextButton.classList.contains('disabled')) {
+                alert('すべての同意にチェックを入れてください。');
+            } else {
+                window.location.href = 'input_form.html';
+            }
+        });
+    </script>
+</body>
+</html>
