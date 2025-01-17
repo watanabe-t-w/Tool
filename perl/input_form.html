@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>入力フォーム</title>
+    <style>
+        /* モーダルウィンドウのスタイル */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<script>
+    // AJAXで住所を取得
+    function fetchAddress(zipcodeId, addressId) {
+        // 郵便番号を取得 (数字以外の文字を削除)
+        var zipcode = document.getElementById(zipcodeId).value.replace(/[^0-9]/g, '');
+
+        if (zipcode.match(/^\d{7}$/)) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/cgi-bin/zipcode.pl?zipcode=" + zipcode, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        try {
+                            if (xhr.responseText) {
+                                // レスポンスをログに表示して確認
+                                // console.log("レスポンス:", xhr.responseText);
+
+                                // BOMを取り除くための処理
+                                var responseText = xhr.responseText.trim().replace(/^\uFEFF/, '');  // BOMの取り除き
+
+                                // JSON形式でレスポンスをパース
+                                var response = JSON.parse(responseText);
+                                if (response.address) {
+                                    document.getElementById(addressId).value = response.address;
+                                } else {
+                                    document.getElementById(addressId).value = "住所が見つかりませんでした";
+                                }
+                            } else {
+                                // console.error("空のレスポンスを受信しました");
+                                document.getElementById(addressId).value = "エラーが発生しました";
+                            }
+                        } catch (e) {
+                            // console.error("JSONパースエラー:", e);
+                            document.getElementById(addressId).value = "エラーが発生しました";
+                        }
+                    } else {
+                        // console.error("HTTPエラー:", xhr.status);
+                        document.getElementById(addressId).value = "通信エラーが発生しました";
+                    }
+                }
+            };                
+            xhr.send();
+        } else {
+            alert("郵便番号の形式が正しくありません。");
+        }
+    }
+</script>
+<body>
+    <!-- 既存のフォーム内容 -->
+    <form action="#" method="post">
+        <h2>1. 被相続人さまについて</h2>
+        <label for="deceased_name">氏名・フリガナ:</label>
+        <input type="text" id="deceased_name" name="deceased_name" required><br>
+        
+        <label for="deceased_postal_code">郵便番号:</label>
+        <input type="text" id="deceased_postal_code" name="deceased_postal_code" required>
+        <button type="button" onclick="fetchAddress('deceased_postal_code', 'deceased_address')">住所変換</button><br>
+        
+        <label for="deceased_address">住所:</label>
+        <input type="text" id="deceased_address" name="deceased_address" required><br>
+        
+        <label for="deceased_birthdate">生年月日:</label>
+        <input type="date" id="deceased_birthdate" name="deceased_birthdate" required><br>
+        
+        <label for="deceased_deathdate">お亡くなりになられた日:</label>
+        <input type="date" id="deceased_deathdate" name="deceased_deathdate"><br>
+        
+        <label for="deceased_siten">お取引店:</label>
+        <input type="text" id="deceased_siten" name="deceased_siten" required><br>
+        
+        <label for="deceased_koza">口座番号:</label>
+        <input type="text" id="deceased_koza" name="deceased_koza" required><br>
+        
+        <h2>2. ご入力者さまについて</h2>
+        <label for="inputter_name">氏名・フリガナ:</label>
+        <input type="text" id="inputter_name" name="inputter_name" required><br>
+        
+        <label for="inputter_phone">日中連絡先電話番号:</label>
+        <input type="tel" id="inputter_phone" name="inputter_phone" required><br>
+        
+        <label for="inputter_postal_code">郵便番号:</label>
+        <input type="text" id="inputter_postal_code" name="inputter_postal_code" required>
+        <button type="button" onclick="fetchAddress('inputter_postal_code', 'inputter_address')">住所変換</button><br>
+        
+        <label for="inputter_address">住所:</label>
+        <input type="text" id="inputter_address" name="inputter_address" required><br>
+        
+        <label for="relationship">お亡くなりになられた方とのご関係:</label>
+        <select id="relationship" name="relationship">
+            <option value="0"></option>
+            <option value="1">配偶者</option>
+            <option value="2">子（養子）</option>
+            <option value="3">孫</option>
+            <option value="4">親</option>
+            <option value="5">兄弟姉妹</option>
+            <option value="6">代理人</option>
+            <option value="7">その他</option>
+        </select><br>
+        <label for="inputter_relationship_sonota">その他:</label>
+        <input type="text" id="relationship_sonota" name="relationship_sonota" required><br>
+        
+        <label for="email">メールアドレス:</label>
+        <input type="email" id="email" name="email" required><br>
+        
+        <label for="email_confirm">メールアドレス確認:</label>
+        <input type="email" id="email_confirm" name="email_confirm" required><br>
+        
+        <label for="contact_method">当庫からの連絡方法:</label>
+        <select id="contact_method" name="contact_method" required>
+            <option value="0"></option>
+            <option value="1">メール</option>
+            <option value="2">電話</option>
+        </select><br>
+        
+        <label for="contact_time">連絡希望時間帯:</label>
+        <select id="contact_time" name="contact_time" required>
+            <option value="0"></option>
+            <option value="1">いつでも</option>
+            <option value="2">指定</option>
+        </select><br>
+        
+        <h2>3. その他相続に必要となる情報</h2>
+        <label for="will">遺言書の有無:</label>
+        <select id="will" name="will" required>
+            <option value="0"></option>
+            <option value="1">有</option>
+            <option value="2">無</option>
+        </select><br>
+        
+        <label for="will_type">遺言書の種類:</label>
+        <input type="text" id="will_type" name="will_type"><br>
+        
+        <label for="executor">遺言執行者:</label>
+        <input type="text" id="executor" name="executor"><br>
+        
+        <label for="agreement">遺産分割協議書の有無:</label>
+        <select id="agreement" name="agreement" required>
+            <option value="0"></option>
+            <option value="1">有</option>
+            <option value="2">無</option>
+            <option value="3">未定</option>
+        </select><br>
+        
+        <label for="lawyer">弁護士等へ相続手続きの依頼予定:</label>
+        <select id="lawyer" name="lawyer" required>
+            <option value="0"></option>
+            <option value="1">有</option>
+            <option value="2">無</option>
+            <option value="3">未定</option>
+        </select><br>
+        
+        <label for="lawyer_name">依頼先（弁護士名等）:</label>
+        <input type="text" id="lawyer_name" name="lawyer_name"><br>
+        
+        <label for="balance_certificate">残高証明書または取引履歴発行の希望:</label>
+        <select id="balance_certificate" name="balance_certificate" required>
+            <option value="0"></option>
+            <option value="1">有</option>
+            <option value="2">無</option>
+            <option value="3">未定</option>
+        </select><br>
+        
+        <label for="balance_type">残高証明書・取引履歴・両方:</label>
+        <input type="text" id="balance_type" name="balance_type"><br>
+        
+        <label for="additional_info">その他ご連絡事項:</label>
+        <textarea id="additional_info" name="additional_info"></textarea><br>
+        
+        <button type="button" id="previousButton">戻る</button>
+        <button type="button" id="nextButton">次へ</button>
+    </form>
+
+    <!-- モーダルウィンドウのHTML -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p id="confirmationText">登録内容確認</p>
+            <div id="confirmationDetails"></div>
+            <button id="confirmButton">確認しました</button>
+        </div>
+    </div>
+
+    <script>
+        const previousButton = document.getElementById('previousButton');
+        const nextButton = document.getElementById('nextButton');
+        const modal = document.getElementById('confirmationModal');
+        const closeButton = document.getElementsByClassName('close')[0];
+        const confirmButton = document.getElementById('confirmButton');
+
+        // 「戻る」ボタンの処理
+        previousButton.addEventListener('click', () => {
+            if (modal.style.display === 'block') {
+                modal.style.display = 'none'; // モーダルを閉じて元のフォームに戻る
+            } else {
+                window.location.href = 'doui.html'; // フォームから直接遷移する場合
+            }
+        });
+
+        // 「次へ」ボタンの処理
+        nextButton.addEventListener('click', () => {
+            // フォームの入力内容を取得
+            const deceasedName = document.getElementById('deceased_name').value;
+            const deceasedPostalCode = document.getElementById('deceased_postal_code').value;
+            const deceasedAddress = document.getElementById('deceased_address').value;
+            const deceased_birthdate = document.getElementById('deceased_birthdate').value;
+            const deceased_deathdate = document.getElementById('deceased_deathdate').value;
+            const deceased_siten = document.getElementById('deceased_siten').value;
+            const deceased_koza = document.getElementById('deceased_koza').value;
+
+            const inputterName = document.getElementById('inputter_name').value;
+            const inputterPhone = document.getElementById('inputter_phone').value;
+            const inputterPostalCode = document.getElementById('inputter_postal_code').value;
+            const inputterAddress = document.getElementById('inputter_address').value;
+            const relationshipSelect = document.getElementById('relationship'); //selectbox id
+            const relationshipValue = relationshipSelect.value;  // valueの値
+            const relationshipText = relationshipSelect.options[relationshipSelect.selectedIndex].text;  // オプションのテキスト
+            const relationship_sonota = document.getElementById('relationship_sonota').value;
+            const email = document.getElementById('email').value;
+            const contactMethodSelect = document.getElementById('contact_method'); //selectbox id
+            const contactMethodValue = contactMethodSelect.value;  // valueの値
+            const contactMethodText = contactMethodSelect.options[contactMethodSelect.selectedIndex].text;  // オプションのテキスト
+            const contactTimeSelect = document.getElementById('contact_time'); //selectbox id
+            const contactTimeValue = contactTimeSelect.value;  // valueの値
+            const contactTimeText = contactTimeSelect.options[contactTimeSelect.selectedIndex].text;  // オプションのテキスト
+            const willSelect = document.getElementById('will'); //selectbox id
+            const willValue = willSelect.value;  // valueの値
+            const willText = willSelect.options[willSelect.selectedIndex].text;  // オプションのテキスト
+            const willType = document.getElementById('will_type').value;
+            const executor = document.getElementById('executor').value;
+            const agreementSelect = document.getElementById('agreement'); //selectbox id
+            const agreementValue = agreementSelect.value;  // valueの値
+            const agreementText = agreementSelect.options[agreementSelect.selectedIndex].text;  // オプションのテキスト
+            const lawyerSelect = document.getElementById('lawyer'); //selectbox id
+            const lawyerValue = lawyerSelect.value;  // valueの値
+            const lawyerText = lawyerSelect.options[lawyerSelect.selectedIndex].text;  // オプションのテキスト
+            const lawyerName = document.getElementById('lawyer_name').value;
+            const balanceCertificateSelect = document.getElementById('balance_certificate'); //selectbox id
+            const balanceCertificateValue = balanceCertificateSelect.value;  // valueの値
+            const balanceCertificateText = balanceCertificateSelect.options[balanceCertificateSelect.selectedIndex].text;  // オプションのテキスト
+            const balanceType = document.getElementById('balance_type').value;
+            const additionalInfo = document.getElementById('additional_info').value;
+
+            // モーダル内に確認内容を表示
+            confirmationDetails.innerHTML = `
+                <strong>1. 被相続人さま（お亡くなりになられた方）について</strong><br>
+                <strong>氏名・フリガナ：</strong>${deceasedName}<br>
+                <strong>郵便番号：</strong>${deceasedPostalCode}<br>
+                <strong>住所：</strong>${deceasedAddress}<br>
+                <strong>生年月日：</strong>${deceased_birthdate}<br>
+                <strong>お亡くなりになられた日：</strong>${deceased_deathdate}<br>
+                <strong>お取引店：</strong>${deceased_siten}<br>
+                <strong>口座番号：</strong>${deceased_koza}<br><br>
+                <strong>2. ご入力者さまについて</strong><br>
+                <strong>氏名・フリガナ：</strong>${inputterName}<br>
+                <strong>日中連絡先電話番号：</strong>${inputterPhone}<br>
+                <strong>郵便番号：</strong>${inputterPostalCode}<br>
+                <strong>住所：</strong>${inputterAddress}<br>
+                <strong>お亡くなりになられた方とのご関係：</strong>${relationshipText}<br>
+                <strong>その他：</strong>${relationship_sonota}<br>
+                <strong>メールアドレス：</strong>${email}<br>
+                <strong>当庫からの連絡方法：</strong>${contactMethodText}<br>
+                <strong>連絡希望時間帯：</strong>${contactTimeText}<br><br>
+                <strong>3. その他相続に必要となる情報</strong><br>
+                <strong>遺言書の有無：</strong>${willText}<br>
+                <strong>遺言書の種類：</strong>${willType}<br>
+                <strong>遺言執行者：</strong>${executor}<br>
+                <strong>遺産分割協議書の有無：</strong>${agreementText}<br>
+                <strong>弁護士等へ相続手続きの依頼予定：</strong>${lawyerText}<br>
+                <strong>依頼先（弁護士名等）：</strong>${lawyerName}<br>
+                <strong>残高証明書または取引履歴発行の希望：</strong>${balanceCertificateText}<br>
+                <strong>残高証明書・取引履歴・両方：</strong>${balanceType}<br>
+                <strong>その他ご連絡事項：</strong>${additionalInfo}<br><br>
+            `;
+
+            modal.style.display = 'block'; // モーダルウィンドウを表示
+        });
+
+        // モーダルの閉じるボタン処理
+        closeButton.addEventListener('click', () => {
+            modal.style.display = 'none'; // モーダルウィンドウを閉じる
+        });
+
+        // 「確認しました」ボタンをクリックした場合
+        confirmButton.addEventListener('click', () => {
+            window.location.href = 'confirmation_form.html'; // 登録完了ページに遷移
+        });
+
+        // モーダル外をクリックした場合も閉じる
+        window.addEventListener('click', (event) => {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>
