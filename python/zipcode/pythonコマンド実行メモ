@@ -1,3 +1,4 @@
 # 実行例 コマンドプロンプト
+# 日本郵便の KEN_ALL.CSV をダウンロード
 > cd 該当ディレクトリに移動
 > python convert.py KEN_ALL.CSV
