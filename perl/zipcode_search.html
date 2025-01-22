@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>郵便番号検索結果</title>
+    <script src="zipcode.js"></script>
+    <script src="searchzipcode.js"></script>
     <script>
         // AJAXで住所を取得
         function fetchAddress() {
@@ -57,14 +59,30 @@
 
     <!-- 郵便番号入力フォーム -->
     <form onsubmit="event.preventDefault(); fetchAddress();">
-        <label for="zipcode">郵便番号 (XXXXXXX):</label>
-        <input type="text" id="zipcode" name="zipcode" maxlength="7" required>
-        <input type="submit" value="検索">
+        <div>
+            <legend>■API zipcpde</legend>
+            <label for="zipcode">郵便番号 (XXXXXXX):</label>
+            <input type="text" id="zipcode" name="zipcode" maxlength="7" required>
+            <input type="submit" value="住所取得">
+            <br>
+            <label>検索結果</label>
+            <label>住所結果:</label>
+            <input type="text" id="address" readonly>
+        </div>
     </form>
-
-    <h3>検索結果</h3>
-    <h4>住所:</h4>
-    <input type="text" id="address" readonly>
+    <hr />
+    <form method="get">
+        <div>
+            <legend>■CSV zipcpde.js</legend>
+            <label for="Postcode">郵便番号 (XXXXXXX):</label>
+            <input type="text" id="Postcode" maxlength="7" />
+            <input type="button" id="csvSubmit" value="住所取得" onClick="onClickSearch()" />
+            <br>
+            <label>検索結果</label>
+            <label>住所結果:</label>
+            <input type="text" id="csvAddress" readonly>
+        </div>
+    </form>
 
 </body>
 </html>
