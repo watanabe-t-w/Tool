@@ -60,7 +60,7 @@
     <!-- 郵便番号入力フォーム -->
     <form onsubmit="event.preventDefault(); fetchAddress();">
         <div>
-            <legend>■API zipcpde</legend>
+            <legend>■API zipcode</legend>
             <label for="zipcode">郵便番号 (XXXXXXX):</label>
             <input type="text" id="zipcode" name="zipcode" maxlength="7" required>
             <input type="submit" value="住所取得">
@@ -68,12 +68,15 @@
             <label>検索結果</label>
             <label>住所結果:</label>
             <input type="text" id="address" readonly>
+            <br>
+            <label>(<a href="https://zipcloud.ibsnet.co.jp/api/search?zipcode=" target="_blank">https://zipcloud.ibsnet.co.jp/api/search?zipcode</a>
+            を使用して検索)</label>
         </div>
     </form>
     <hr />
     <form method="get">
         <div>
-            <legend>■CSV zipcpde.js</legend>
+            <legend>■CSV zipcode.js</legend>
             <label for="Postcode">郵便番号 (XXXXXXX):</label>
             <input type="text" id="Postcode" maxlength="7" />
             <input type="button" id="csvSubmit" value="住所取得" onClick="onClickSearch()" />
@@ -81,6 +84,8 @@
             <label>検索結果</label>
             <label>住所結果:</label>
             <input type="text" id="csvAddress" readonly>
+            <br>
+            <label>(日本郵便KEN_ALL.CSVをダウンロード後convert.pyでzipcode.jsをデータを作成してsearchzipcode.jsで検索)</label>
         </div>
     </form>
 
