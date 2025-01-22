@@ -1,0 +1,3 @@
+# 実行例 コマンドプロンプト
+> cd 該当ディレクトリに移動
+> python convert.py KEN_ALL.CSV
